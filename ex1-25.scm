@@ -1,0 +1,42 @@
+(require 'random)
+
+(define (square x)
+  (* x x))
+
+(define (fast-expt b n)
+  (cond ((= n 0) 1)
+        ((even? n) (square (fast-expt b (/ n 2))))
+        (else (* b (fast-expt b (- n 1))))))
+
+(define (expmod base exp m)
+  (remainder (fast-expt base exp) m))
+
+(define (fermat-test n)
+  (define (try-it a)
+    (= (expmod a n n) a))
+  (try-it (+ 1 (random (- n 1)))))
+
+(define (fast-prime? n times)
+  (cond ((= times 0) #t)
+        ((fermat-test n) (fast-prime? n (- times 1)))
+        (else #f)))
+
+(define (timed-prime-test n)
+  (define (runtime) (get-internal-run-time))
+  (define (start-prime-test n start-time)
+    (cond ((fast-prime? n 30)
+	   (report-prime n (- (runtime) start-time))
+	   #t)
+	  (else #f)))
+  (define (report-prime num elapsed-time)
+    (display num)
+    (display " *** ")
+    (display elapsed-time)
+    (newline))
+  (start-prime-test n (runtime)))
+
+(define (search-for-primes num count)
+  (cond ((= 0 count) (newline)(display "done"))
+	((timed-prime-test num)
+	 (search-for-primes (+ num 1) (- count 1)))
+	(else (search-for-primes (+ num 1) count))))

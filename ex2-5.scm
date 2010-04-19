@@ -1,0 +1,17 @@
+(define (cons-m x y)
+  (* (expt 2 x)
+     (expt 3 y)))
+
+(define (car-m z)
+  (define (iter val count)
+    (if (= (remainder val 2) 0)
+        (iter (/ val 2) (1+ count))
+        count))
+  (iter z 0))
+
+(define (cdr-m z)
+  (define (iter val count)
+    (if (= (remainder val 3) 0)
+        (iter (/ val 3) (1+ count))
+        count))
+  (iter z 0))

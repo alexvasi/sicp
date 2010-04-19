@@ -1,0 +1,12 @@
+(define (same-parity val . items)
+  (define (ok? x)
+    (eqv? (odd? x) (odd? val)))
+  (define (filter tail)
+    (cond ((null? tail) (list))
+          ((ok? (car tail))
+           (cons (car tail) (filter (cdr tail))))
+          (else (filter (cdr tail)))))
+  (cons val (filter items)))
+
+(same-parity 1 2 3 4 5 6 7)
+(same-parity 2 3 4 5 6 7)
